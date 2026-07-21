@@ -4,79 +4,147 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 import morgan from "morgan";
 
+import authRoutes from "./routes/auth.js";
+import { errorHandler } from "./middleware/errorHandler.js";
+
+
 // Load environment variables
+
 dotenv.config();
+
+
 
 const app: Application = express();
 
+
 // =======================
-// Middleware
+// GLOBAL MIDDLEWARE
 // =======================
+
 
 app.use(
   cors({
     origin: "*",
-    credentials: true,
+    credentials: true
   })
 );
 
-app.use(helmet());
 
-app.use(express.json());
+app.use(
+  helmet()
+);
 
-app.use(express.urlencoded({ extended: true }));
 
-app.use(morgan("dev"));
+app.use(
+  express.json()
+);
 
-// =======================
-// Health Check
-// =======================
 
-app.get("/", (req: Request, res: Response) => {
-  res.status(200).json({
-    success: true,
-    app: "BrandPilot API",
-    version: "1.0.0",
-    status: "Running 🚀",
-    message: "Welcome to BrandPilot Backend"
-  });
-});
+app.use(
+  express.urlencoded({
+    extended:true
+  })
+);
 
-// =======================
-// API Status
-// =======================
 
-app.get("/api", (req: Request, res: Response) => {
-  res.json({
-    success: true,
-    message: "BrandPilot API Ready"
-  });
-});
+app.use(
+  morgan("dev")
+);
+
+
 
 // =======================
-// 404 Handler
+// ROUTES
 // =======================
 
-app.use("*", (req: Request, res: Response) => {
-  res.status(404).json({
-    success: false,
-    message: "Endpoint not found"
-  });
-});
+
+app.get(
+  "/",
+  (req:Request,res:Response)=>{
+
+    res.json({
+
+      success:true,
+
+      app:"BrandPilot API",
+
+      version:"1.0.0",
+
+      message:"AI Business Operating System Online 🚀"
+
+    });
+
+  }
+);
+
+
+
+// Authentication routes
+
+app.use(
+  "/api/auth",
+  authRoutes
+);
+
+
 
 // =======================
-// Server
+// 404 ROUTE
 // =======================
 
-const PORT = process.env.PORT || 3000;
+app.use(
+  "*",
+  (req:Request,res:Response)=>{
 
-app.listen(PORT, () => {
-  console.log(`
-=====================================
-🚀 BrandPilot Backend Started
-=====================================
-Server: http://localhost:${PORT}
-Environment: ${process.env.NODE_ENV || "development"}
-=====================================
+    res.status(404).json({
+
+      success:false,
+
+      message:"Route not found"
+
+    });
+
+  }
+);
+
+
+
+// =======================
+// ERROR HANDLER
+// =======================
+
+app.use(
+  errorHandler
+);
+
+
+
+// =======================
+// SERVER START
+// =======================
+
+
+const PORT =
+process.env.PORT || 3000;
+
+
+
+app.listen(
+  PORT,
+  ()=>{
+
+    console.log(`
+================================
+
+🚀 BrandPilot Backend Running
+
+PORT: ${PORT}
+
+Environment:
+${process.env.NODE_ENV || "development"}
+
+================================
 `);
-});
+
+  }
+);
