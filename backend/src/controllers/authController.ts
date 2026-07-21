@@ -1,10 +1,17 @@
 import { Request, Response } from "express";
+
 import {
   signupUser,
   loginUser,
   logoutUser,
   getUser
 } from "../services/authService.js";
+
+import {
+  signupValidator,
+  loginValidator
+} from "../utils/validators.js";
+
 
 
 // =======================
@@ -15,41 +22,47 @@ export const signup = async (
   req: Request,
   res: Response
 ) => {
+
   try {
 
-    const { name, email, password } = req.body;
 
-    if (!name || !email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "Name, email and password are required"
-      });
-    }
+    const validatedData =
+      signupValidator.parse(req.body);
 
 
-    const user = await signupUser({
-      name,
-      email,
-      password
-    });
+
+    const user =
+      await signupUser(validatedData);
+
 
 
     return res.status(201).json({
-      success: true,
-      message: "Account created successfully",
-      data: user
+
+      success:true,
+
+      message:"Account created successfully",
+
+      data:user
+
     });
 
 
-  } catch (error: any) {
+  } catch(error:any){
+
 
     return res.status(400).json({
-      success: false,
-      message: error.message
+
+      success:false,
+
+      message:error.message
+
     });
 
+
   }
+
 };
+
 
 
 
@@ -57,47 +70,55 @@ export const signup = async (
 // LOGIN
 // =======================
 
+
 export const login = async (
-  req: Request,
-  res: Response
-) => {
-
-  try {
-
-    const { email, password } = req.body;
+  req:Request,
+  res:Response
+)=>{
 
 
-    if (!email || !password) {
-      return res.status(400).json({
-        success:false,
-        message:"Email and password are required"
-      });
-    }
+  try{
 
 
-    const session = await loginUser({
-      email,
-      password
-    });
+    const validatedData =
+      loginValidator.parse(req.body);
+
+
+
+    const session =
+      await loginUser(validatedData);
+
 
 
     return res.status(200).json({
+
       success:true,
+
       message:"Login successful",
-      data: session
+
+      data:session
+
     });
 
 
-  } catch(error:any){
+
+  }catch(error:any){
+
 
     return res.status(401).json({
+
       success:false,
+
       message:error.message
+
     });
+
 
   }
 
+
 };
+
 
 
 
@@ -105,32 +126,47 @@ export const login = async (
 // LOGOUT
 // =======================
 
+
 export const logout = async (
-  req: Request,
-  res: Response
+  req:Request,
+  res:Response
 )=>{
 
+
   try{
+
 
     await logoutUser();
 
 
+
     return res.status(200).json({
+
       success:true,
+
       message:"Logged out successfully"
+
     });
+
 
 
   }catch(error:any){
 
+
     return res.status(400).json({
+
       success:false,
+
       message:error.message
+
     });
+
 
   }
 
+
 };
+
 
 
 
@@ -138,31 +174,46 @@ export const logout = async (
 // CURRENT USER
 // =======================
 
+
 export const getCurrentUser = async (
   req:Request,
   res:Response
 )=>{
 
+
   try{
 
-    const user = await getUser(
-      req.headers.authorization
-    );
+
+    const user =
+      await getUser(
+        req.headers.authorization
+      );
+
 
 
     return res.status(200).json({
+
       success:true,
+
       data:user
+
     });
+
 
 
   }catch(error:any){
 
+
     return res.status(401).json({
+
       success:false,
+
       message:error.message
+
     });
 
+
   }
+
 
 };
