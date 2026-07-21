@@ -5,7 +5,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import authRoutes from "./routes/auth.js";
-import workspaceRoutes from "./routes/workspace.routes.js";
+import workspaceRoutes from "./routes/workspace.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
 
