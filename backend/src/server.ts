@@ -5,13 +5,12 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import authRoutes from "./routes/auth.js";
+import workspaceRoutes from "./routes/workspace.routes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
 
 // Load environment variables
-
 dotenv.config();
-
 
 
 const app: Application = express();
@@ -42,7 +41,7 @@ app.use(
 
 app.use(
   express.urlencoded({
-    extended:true
+    extended: true
   })
 );
 
@@ -60,17 +59,17 @@ app.use(
 
 app.get(
   "/",
-  (req:Request,res:Response)=>{
+  (req: Request, res: Response) => {
 
     res.json({
 
-      success:true,
+      success: true,
 
-      app:"BrandPilot API",
+      app: "BrandPilot API",
 
-      version:"1.0.0",
+      version: "1.0.0",
 
-      message:"AI Business Operating System Online 🚀"
+      message: "AI Business Operating System Online 🚀"
 
     });
 
@@ -88,19 +87,28 @@ app.use(
 
 
 
+// Workspace routes
+
+app.use(
+  "/api/workspaces",
+  workspaceRoutes
+);
+
+
+
 // =======================
 // 404 ROUTE
 // =======================
 
 app.use(
   "*",
-  (req:Request,res:Response)=>{
+  (req: Request, res: Response) => {
 
     res.status(404).json({
 
-      success:false,
+      success: false,
 
-      message:"Route not found"
+      message: "Route not found"
 
     });
 
@@ -128,10 +136,9 @@ const PORT =
 process.env.PORT || 3000;
 
 
-
 app.listen(
   PORT,
-  ()=>{
+  () => {
 
     console.log(`
 ================================
