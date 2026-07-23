@@ -31,14 +31,13 @@ export async function createWorkspaceController(
     });
 
   } catch (error: any) {
-
     return res.status(500).json({
       success: false,
       message: error.message
     });
-
   }
 }
+
 
 export async function getWorkspacesController(
   req: Request,
@@ -46,7 +45,7 @@ export async function getWorkspacesController(
 ) {
   try {
 
-    const { userId } = req.params;
+    const userId = String(req.params.userId);
 
     const workspaces = await getUserWorkspaces(userId);
 
@@ -56,11 +55,9 @@ export async function getWorkspacesController(
     });
 
   } catch (error: any) {
-
     return res.status(500).json({
       success: false,
       message: error.message
     });
-
   }
-  }
+}
