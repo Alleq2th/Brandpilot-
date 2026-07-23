@@ -44,16 +44,9 @@ export async function getWorkspacesController(
   res: Response
 ) {
   try {
-    const userIdParam = req.params.userId;
+    const userId = req.params.userId as string;
 
-    if (!userIdParam || Array.isArray(userIdParam)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid userId"
-      });
-    }
-
-    const workspaces = await getUserWorkspaces(userIdParam);
+    const workspaces = await getUserWorkspaces(userId);
 
     return res.json({
       success: true,
