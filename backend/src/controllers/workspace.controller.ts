@@ -19,8 +19,8 @@ export async function createWorkspaceController(
     }
 
     const workspace = await createWorkspace(
-      ownerId,
-      name,
+      String(ownerId),
+      String(name),
       description
     );
 
@@ -44,10 +44,16 @@ export async function getWorkspacesController(
   res: Response
 ) {
   try {
+    const userIdParam = req.params.userId;
 
-    const userId = String(req.params.userId);
+    if (!userIdParam || Array.isArray(userIdParam)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid userId"
+      });
+    }
 
-    const workspaces = await getUserWorkspaces(userId);
+    const workspaces = await getUserWorkspaces(userIdParam);
 
     return res.json({
       success: true,
